@@ -1,1 +1,1 @@
-python-3.12.10
+worker: python bot.py
