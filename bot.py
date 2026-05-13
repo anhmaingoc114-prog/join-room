@@ -15,49 +15,40 @@ VN_TZ = zoneinfo.ZoneInfo("Asia/Ho_Chi_Minh")
 @bot.event
 async def on_ready():
     guild = bot.get_guild(GUILD_ID)
-    server_name = guild.name if guild else "Thế Giới Ảo"
+    server_name = guild.name if guild else "Hassta"
     print(f"✅ Bot online trên server: {server_name}")
 
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    # Dùng member.guild thay vì get_guild để ổn định hơn
-    guild = member.guild
+    guild = bot.get_guild(GUILD_ID)
     
     now = datetime.datetime.now(VN_TZ)
     time_str = now.strftime("%H:%M")
 
-    server_name = guild.name if guild else "Server"
-    clean_name = server_name.replace(" ", "").lower()
-    footer_text = f".gg/{clean_name} • Hôm nay lúc {time_str}"
+    footer_text = f".gg/hassta • Hôm nay lúc {time_str}"
 
-    try:
-        if before.channel is None and after.channel:   # JOIN
-            embed = discord.Embed(
-                title="Tham Gia Voice Chat",
-                description=f"{member.mention} **đã tham gia voice chat**",
-                color=0x00ff00
-            )
-            embed.set_thumbnail(url=member.display_avatar.url)
-            embed.set_footer(text=footer_text)
+    if before.channel is None and after.channel:   # JOIN
+        embed = discord.Embed(
+            title="Tham Gia Voice Chat",
+            description=f"{member.mention} **đã tham gia voice chat**",
+            color=0x00ff00
+        )
+        embed.set_thumbnail(url=member.display_avatar.url)
+        embed.set_footer(text=footer_text)
 
-            await after.channel.send(embed=embed)
+        await after.channel.send(embed=embed)
 
-        elif before.channel and after.channel is None:   # LEAVE
-            embed = discord.Embed(
-                title="Rời Voice Chat",
-                description=f"{member.mention} **đã rời voice chat**",
-                color=0xff0000
-            )
-            embed.set_thumbnail(url=member.display_avatar.url)
-            embed.set_footer(text=footer_text)
+    elif before.channel and after.channel is None:   # LEAVE
+        embed = discord.Embed(
+            title="Rời Voice Chat",
+            description=f"{member.mention} **đã rời voice chat**",
+            color=0xff0000
+        )
+        embed.set_thumbnail(url=member.display_avatar.url)
+        embed.set_footer(text=footer_text)
 
-            await before.channel.send(embed=embed)
-
-    except discord.Forbidden:
-        pass
-    except Exception as e:
-        print(f"Lỗi khác: {e}")
+        await before.channel.send(embed=embed)
 
 
 if not TOKEN:
