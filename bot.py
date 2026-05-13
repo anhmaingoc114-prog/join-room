@@ -21,12 +21,12 @@ async def on_ready():
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    guild = bot.get_guild(GUILD_ID)
+    # Dùng member.guild thay vì get_guild để ổn định hơn
+    guild = member.guild
     
     now = datetime.datetime.now(VN_TZ)
     time_str = now.strftime("%H:%M")
 
-    # Tự động lấy tên server thật + giữ .gg/
     server_name = guild.name if guild else "Server"
     clean_name = server_name.replace(" ", "").lower()
     footer_text = f".gg/{clean_name} • Hôm nay lúc {time_str}"
@@ -55,7 +55,6 @@ async def on_voice_state_update(member, before, after):
             await before.channel.send(embed=embed)
 
     except discord.Forbidden:
-        # Bot không có quyền gửi tin nhắn ở voice channel này → bỏ qua
         pass
     except Exception as e:
         print(f"Lỗi khác: {e}")
