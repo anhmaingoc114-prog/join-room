@@ -28,30 +28,37 @@ async def on_voice_state_update(member, before, after):
 
     # Tự động lấy tên server thật + giữ .gg/
     server_name = guild.name if guild else "Server"
-    clean_name = server_name.replace(" ", "").lower()   # bỏ dấu cách, viết thường
+    clean_name = server_name.replace(" ", "").lower()
     footer_text = f".gg/{clean_name} • Hôm nay lúc {time_str}"
 
-    if before.channel is None and after.channel:   # JOIN
-        embed = discord.Embed(
-            title="Tham Gia Voice Chat",
-            description=f"{member.mention} **đã tham gia voice chat**",
-            color=0x00ff00
-        )
-        embed.set_thumbnail(url=member.display_avatar.url)
-        embed.set_footer(text=footer_text)
+    try:
+        if before.channel is None and after.channel:   # JOIN
+            embed = discord.Embed(
+                title="Tham Gia Voice Chat",
+                description=f"{member.mention} **đã tham gia voice chat**",
+                color=0x00ff00
+            )
+            embed.set_thumbnail(url=member.display_avatar.url)
+            embed.set_footer(text=footer_text)
 
-        await after.channel.send(embed=embed)
+            await after.channel.send(embed=embed)
 
-    elif before.channel and after.channel is None:   # LEAVE
-        embed = discord.Embed(
-            title="Rời Voice Chat",
-            description=f"{member.mention} **đã rời voice chat**",
-            color=0xff0000
-        )
-        embed.set_thumbnail(url=member.display_avatar.url)
-        embed.set_footer(text=footer_text)
+        elif before.channel and after.channel is None:   # LEAVE
+            embed = discord.Embed(
+                title="Rời Voice Chat",
+                description=f"{member.mention} **đã rời voice chat**",
+                color=0xff0000
+            )
+            embed.set_thumbnail(url=member.display_avatar.url)
+            embed.set_footer(text=footer_text)
 
-        await before.channel.send(embed=embed)
+            await before.channel.send(embed=embed)
+
+    except discord.Forbidden:
+        # Bot không có quyền gửi tin nhắn ở voice channel này → bỏ qua
+        pass
+    except Exception as e:
+        print(f"Lỗi khác: {e}")
 
 
 if not TOKEN:
