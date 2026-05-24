@@ -15,7 +15,7 @@ VN_TZ = zoneinfo.ZoneInfo("Asia/Ho_Chi_Minh")
 @bot.event
 async def on_ready():
     guild = bot.get_guild(GUILD_ID)
-    server_name = guild.name if guild else "Hassta"
+    server_name = guild.name if guild else "fml bụng bự"
     print(f"✅ Bot online trên server: {server_name}")
 
 
@@ -26,7 +26,7 @@ async def on_voice_state_update(member, before, after):
     now = datetime.datetime.now(VN_TZ)
     time_str = now.strftime("%H:%M")
 
-    footer_text = f".gg/hassta • Hôm nay lúc {time_str}"
+    footer_text = f".gg/fml bụng bự • Hôm nay lúc {time_str}"
 
     if before.channel is None and after.channel:   # JOIN
         embed = discord.Embed(
